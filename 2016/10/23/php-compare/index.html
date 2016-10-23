@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <title>php中的弱类型比较 | DenverB</title>
+  <meta name="description" content="不忘初心，方得始终。" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="MobileOptimized" content="320" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" type="text/css" href="/css/screen.css" />
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Noto+Serif:400,700,400italic|Open+Sans:700,400" />
+
+  <meta name="generator" content="DenverB">
+
+  
+  
+  
+
+  
+</head>
+
+
+<body class="post-template">
+
+  <header class="site-head"  style="background-image: url(//blog.ghost.org/content/images/2013/Nov/cover.png)" >
+    <div class="vertical">
+        <div class="site-head-content inner">
+             <a class="blog-logo" href="/"><img src="//blog.ghost.org/content/images/2013/Nov/bloglogo_1-1.png" alt="Blog Logo"/></a> 
+            <h1 class="blog-title">DenverB</h1>
+            <h2 class="blog-description">不忘初心，方得始终。</h2>
+        </div>
+    </div>
+</header>
+  
+
+<main class="content" role="main">
+  <article class="post">
+    <span class="post-meta">
+      <time datetime="2016-10-23T05:40:28.000Z" itemprop="datePublished">
+          2016-10-23
+      </time>
+    
+    
+    | 
+    <a href='/tags/web安全/'>web安全</a>
+    
+    
+</span>
+    <h1 class="post-title">php中的弱类型比较</h1>
+    <section class="post-content">
+      <h2 id="关于等号"><a href="#关于等号" class="headerlink" title="关于等号"></a>关于等号</h2><p>&#160; &#160; &#160; &#160;在大多数编程语言中，一个等号代表赋值，两个等号代表等于，php也是这样的，但php却还有一个三个等号。三个等号也代表相等，那么两个等号和三个等号之间有什么不同的呢。<br>&#160; &#160; &#160; &#160;在php中，使用两个等号来判断时，只需要两个变量的值相同即可返回true，否则返回false。而使用三个等号，则需要两个变量不仅要值相同，并且两个变量的类型也必须相同时才会返回true，否则返回false。举个简单的例子，a变量为数字1，b变量为字符‘1’，在php中，$a==$b就会返回一个true，而$a===$b就会返回false。那么这就形成了第一种弱类型，<strong>使用两个等号判断变量是否相同时时，只需要变量的值相同，变量类型却没有要求</strong>。  </p>
+<h2 id="关于类型转换"><a href="#关于类型转换" class="headerlink" title="关于类型转换"></a>关于类型转换</h2><p>&#160; &#160; &#160; &#160;php是一种若类型语言，所以在比较过程中，会对变量进行自动的类型转换。可以看看下面的例子。  </p>
+<pre><code class="php"><span class="keyword">echo</span> <span class="string">"0=='':"</span>;
+var_dump(<span class="number">0</span>==<span class="string">''</span>);
+<span class="keyword">echo</span> <span class="string">"&lt;br&gt;null==false:"</span>;
+var_dump(<span class="keyword">null</span>==<span class="keyword">false</span>);
+<span class="keyword">echo</span> <span class="string">"&lt;br&gt;1='1abc':"</span>;
+var_dump(<span class="number">1</span>==<span class="string">'1abc'</span>);
+<span class="keyword">echo</span> <span class="string">"&lt;br&gt;0='abcdefg':"</span>;
+var_dump(<span class="number">0</span>==<span class="string">'abcdefg'</span>);
+</code></pre>
+<p><img src="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-23%20%E4%B8%8B%E5%8D%882.03.50.png" alt=""><br>&#160; &#160; &#160; &#160;可以看到输出结果都为true。可见，php在进行字符串与数字比较时，会强制把字符串转换为数字，而转换时会截取到第一个不是数字的字符前，再见上双等号的缘故。所以1与’1abc’是相等的而0与’abcdefg’是相等的。而且，在php中如果遇到了0e数字的形式会当成科学计数法来处理，所以所有0e数字形式的字符串在进行比较的时候都会被当成0.这也就是在很多ctf中都有出现的“md5碰撞”实质就是两个md5值都是0e数字形式的字符串比较时是相等的。  </p>
+<h2 id="关于函数"><a href="#关于函数" class="headerlink" title="关于函数"></a>关于函数</h2><p>&#160; &#160; &#160; &#160;php中有很多存在有弱类型问题的函数。  </p>
+<h3 id="md5"><a href="#md5" class="headerlink" title="md5()"></a>md5()</h3><p>&#160; &#160; &#160; &#160;php中可以使用md5函数来加密一个字符串，所以md5函数需要传入一个字符串，但是如果我们给md5函数中传入一个数组，此时md5不会报错，但会返回一个null，此时两个null比较就是相等的了。测试:  </p>
+<pre><code class="php">$a=<span class="keyword">array</span>(<span class="string">'abc'</span>,<span class="string">'def'</span>);
+$b=<span class="keyword">array</span>(<span class="string">'hij'</span>,<span class="string">'klm'</span>);
+$c=<span class="keyword">array</span>(<span class="string">'hhh'</span>=&gt;<span class="string">'aaa'</span>);
+var_dump(md5($a)==md5($b));
+var_dump(md5($a)==md5($c));
+</code></pre>
+<p>&#160; &#160; &#160; &#160;运行结果：<br><img src="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-23%20%E4%B8%8B%E5%8D%882.36.20.png" alt="">  </p>
+<h3 id="intval"><a href="#intval" class="headerlink" title="intval()"></a>intval()</h3><p>&#160; &#160; &#160; &#160;intval()函数可以将字符串转化为int，但就像在前面类型转换时所看到的，intval()函数在转换时，也是只截取到第一个不为数字的字符。</p>
+<h3 id="strcmp"><a href="#strcmp" class="headerlink" title="strcmp()"></a>strcmp()</h3><p>&#160; &#160; &#160; &#160;strcmp()函数时php中判断字符串是否相等的函数，它实现的方法是通过将需要比较的变量传唤成ascii值，之后相减看结果的正负。如果相等的话，就会返回0，不想等就会返回1或－1。然而当我们将一个参数改为数组，此时，strcmp()不会报错但会返回null，然后null与0在使用两个等号比较时又是相等的，这就会存在一个绕过啦，测试：</p>
+<pre><code class="php">$a=<span class="string">'test'</span>;
+$b=<span class="keyword">array</span>(<span class="string">'heiheihei'</span>);
+var_dump(strcmp($a, $b));
+<span class="keyword">if</span>(strcmp($a, $b)==<span class="number">0</span>){
+    <span class="keyword">echo</span> <span class="string">"&lt;br&gt;bypass it"</span>;
+}
+</code></pre>
+<p>&#160; &#160; &#160; &#160;运行结果<br><img src="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-23%20%E4%B8%8B%E5%8D%883.04.20.png" alt="">  </p>
+<h3 id="in-array"><a href="#in-array" class="headerlink" title="in_array()"></a>in_array()</h3><p>&#160; &#160; &#160; &#160;in_array()在手册中的定义为：bool in_array ( mixed $needle , array $haystack [, bool $strict = FALSE ] )第一个参数是索要查找的变量，第二个参数是一个目标数组，第三个参数默认为false，如果没有传入第三个参数，则其值为false，也就是说不会要求类型一致。如果传入了一个true，则会寻找数组中与变量值相同且类型一致的元素。换句话说，这个函数实现的方法就是遍历整个数组，然后使用两个等号去对每一个元素和传入的变量进行比较，如果有返回true认为变量在这个数组中是存在的。那么我们这里就存在两个等号比较时会出现的问题，比如说：  </p>
+<pre><code class="php">$a=<span class="string">'222test'</span>;
+$b=<span class="keyword">array</span>(<span class="number">111</span>,<span class="number">222</span>,<span class="number">333</span>);
+var_dump(in_array($a,$b));
+</code></pre>
+<p>&#160; &#160; &#160; &#160;运行结果<br><img src="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-23%20%E4%B8%8B%E5%8D%883.17.41.png" alt=""></p>
+<h3 id="switch"><a href="#switch" class="headerlink" title="switch()"></a>switch()</h3><p>&#160; &#160; &#160; &#160;php中在执行switch($case)语句时，如果case的类型为int，则会对传入的值进行类型转换，那么此时就涉及到前面所说的类型转换问题了。  </p>
+<pre><code class="php">$a=<span class="string">'3test'</span>;
+<span class="keyword">switch</span> ($a) {
+    <span class="keyword">case</span> <span class="number">1</span>:
+        <span class="keyword">echo</span> <span class="string">"this is 1"</span>;
+        <span class="keyword">break</span>;
+    <span class="keyword">case</span> <span class="number">2</span>:
+        <span class="keyword">echo</span> <span class="string">"this is 2"</span>;
+        <span class="keyword">break</span>;
+    <span class="keyword">case</span> <span class="number">3</span>:
+        <span class="keyword">echo</span> <span class="string">"this is 3"</span>;
+        <span class="keyword">break</span>;
+    <span class="keyword">default</span>:
+        <span class="keyword">echo</span> <span class="string">"other"</span>;
+        <span class="keyword">break</span>;
+}
+</code></pre>
+<p>&#160; &#160; &#160; &#160;运行结果<br><img src="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-23%20%E4%B8%8B%E5%8D%883.25.39.png" alt=""></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>&#160; &#160; &#160; &#160;php是一种弱类型语言，这种弱类型与语言方式虽然会带来一些便捷，但也会存在一些安全问题。所以在进行开发时要尽量避免使用不安全的弱类型比较并对参数进行严格的限制，不要让用户可控的参数直接进入到危险函数中。最后附一张php中弱类型的松散比较表格:<br><img src="http://img0.tuicool.com/AfIVJnE.jpg!web" alt=""></p>
+
+    </section>
+    <footer class="post-footer">
+      <section class="author">
+    <h4>DenverB</h4>
+    <p>A designer, developer and entrepreneur. Spends his time travelling the world with a bag of kites. Likes journalism and publishing platforms.</p>
+</section>
+      <section class="share">
+    <h4>Share this post</h4>
+    <a class="icon-twitter" href="http://twitter.com/share?url=http://yoursite.com/2016/10/23/php-compare/"
+       onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+        <span class="hidden">Twitter</span>
+    </a>
+    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2016/10/23/php-compare/"
+       onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+        <span class="hidden">Facebook</span>
+    </a>
+    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://yoursite.com/2016/10/23/php-compare/"
+       onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+        <span class="hidden">Google+</span>
+    </a>
+</section>
+    </footer>
+  </article>
+  <nav class="pagination" role="pagination">
+    
+    <span class="page-number">•</span>
+    
+    <a class="older-posts" href="/2016/10/22/sqlmap/">
+        sqlmap中的“蜜罐”实验 →
+    </a>
+    
+</nav>
+  <div id="comment" class="comments-area">
+    <h1 class="title"><a href="#disqus_comments" name="disqus_comments">Comments</a></h1>
+
+    
+</div>
+</main>
+
+
+  
+<footer class="site-footer">
+  
+  <div class="inner">
+     <section class="copyright">All content copyright <a href="/">DenverB</a> &copy; 2014 &bull; All rights reserved.</section>
+     <section class="poweredby">Proudly published with <a class="icon-ghost" href="http://zespia.tw/hexo/">Hexo</a></section>
+  </div>
+</footer>
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<script type="text/javascript" src="/js/jquery.fitvids.js"></script>
+<script type="text/javascript" src="/js/index.js"></script>
+
+
+
+
+
+
+</body>
+</html>
