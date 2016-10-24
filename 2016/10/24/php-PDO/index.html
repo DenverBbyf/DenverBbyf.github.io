@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <title>PDO机制学习 | DenverB</title>
+  <meta name="description" content="不忘初心，方得始终。" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="MobileOptimized" content="320" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" type="text/css" href="/css/screen.css" />
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Noto+Serif:400,700,400italic|Open+Sans:700,400" />
+
+  <meta name="generator" content="DenverB">
+
+  
+  
+  
+
+  
+</head>
+
+
+<body class="post-template">
+
+  <header class="site-head"  style="background-image: url(//blog.ghost.org/content/images/2013/Nov/cover.png)" >
+    <div class="vertical">
+        <div class="site-head-content inner">
+             <a class="blog-logo" href="/"><img src="//blog.ghost.org/content/images/2013/Nov/bloglogo_1-1.png" alt="Blog Logo"/></a> 
+            <h1 class="blog-title">DenverB</h1>
+            <h2 class="blog-description">不忘初心，方得始终。</h2>
+        </div>
+    </div>
+</header>
+  
+
+<main class="content" role="main">
+  <article class="post">
+    <span class="post-meta">
+      <time datetime="2016-10-24T13:19:19.000Z" itemprop="datePublished">
+          2016-10-24
+      </time>
+    
+    
+    | 
+    <a href='/tags/php学习/'>php学习</a>
+    
+    
+</span>
+    <h1 class="post-title">PDO机制学习</h1>
+    <section class="post-content">
+      <h2 id="什么是PDO"><a href="#什么是PDO" class="headerlink" title="什么是PDO"></a>什么是PDO</h2><p>&#160; &#160; &#160; &#160;PDO（PHP数据对象） 是一个轻量级的、具有兼容接口的PHP数据连接拓展，是php官方的一个库，PDO最主要的优点就是不局限于数据库的类型，并且对于做安全开发来说吗，PDO的安全性更加值得信赖。并且在php6中，PDO也成为了默认的与mysql交互的方式。</p>
+<h2 id="PDO使用学习记录"><a href="#PDO使用学习记录" class="headerlink" title="PDO使用学习记录"></a>PDO使用学习记录</h2><p>&#160; &#160; &#160; &#160;PDO是php官方的一个库，就可以说就是一个封装好了的类，所以它有很多自己的方法。我们来写一个新的类实现使用PDO机制与mysql交互。那么我们可以在类的__construct()这一魔法函数中进行与mysql数据库的连接。  </p>
+<pre><code class="php">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($uname,$passwd,$host,$dbname)</span></span>{
+      $dsn = <span class="string">'mysql:dbname='</span>.$dbname.<span class="string">';host='</span>.$host;
+      $user = $uname;
+      $password = $passwd;
+      <span class="keyword">try</span> {
+          <span class="keyword">$this</span>-&gt;dbh = <span class="keyword">new</span> PDO($dsn, $user, $password,<span class="keyword">array</span>(PDO::MYSQL_ATTR_INIT_COMMAND =&gt; <span class="string">"SET NAMES 'utf8';"</span>));
+      } <span class="keyword">catch</span> (PDOException $e) {
+          <span class="keyword">echo</span> <span class="string">'Connection failed: '</span> . $e-&gt;getMessage();
+      }
+}
+</code></pre>
+<p>&#160; &#160; &#160; &#160;通过__construct()函数创建了一个数据库连接对象并设置编码为utf－8。之后我们就可以通过$dbh来进行各种数据库操作了。  </p>
+<h3 id="SELECT"><a href="#SELECT" class="headerlink" title="SELECT"></a>SELECT</h3><pre><code class="php"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">select</span><span class="params">($sql)</span></span>{
+        $sth = <span class="keyword">$this</span>-&gt;dbh-&gt;prepare($sql);
+        $sth-&gt;execute();
+        $ret = $sth-&gt;fetchAll(PDO::FETCH_ASSOC);
+        <span class="keyword">return</span> $ret;
+  }
+</code></pre>
+<p>&#160; &#160; &#160; &#160;execute()为执行函数，fecthAll()函数可以获取查询结果，其中的参数是可选的：<br>PDO::FETCH_ASSOC – 关联数组形式<br>PDO::FETCH_NUM – 数字索引数组形式<br>PDO::FETCH_BOTH – 两者数组形式都有<br>PDO::FETCH_OBJ – 按照对象的形式<br>&#160; &#160; &#160; &#160;想要单单返回一列的内容的话，可以使用fechColumn()，该函数的参数为一个整形数字，代表列号。</p>
+<h3 id="insert-update"><a href="#insert-update" class="headerlink" title="insert/update"></a>insert/update</h3><pre><code class="php"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">dbInsert</span><span class="params">($sql)</span></span>{
+    $sth = <span class="keyword">$this</span>-&gt;dbh;
+    $count = $sth-&gt;exec($sql);
+    <span class="keyword">if</span>($count){
+        <span class="keyword">return</span> <span class="keyword">true</span>;
+    }<span class="keyword">else</span> {
+        <span class="keyword">return</span> <span class="keyword">false</span>;
+    }
+}
+</code></pre>
+<p>&#160; &#160; &#160; &#160;PDO机制中，在执行insert或者update操作时会返回受影响的行数。另外还有两个周边的操作，一个是PDO::lastInsertId()和PDOStatement::rowCount()。PDO::lastInsertId()是返回上次插入操作，主键列类型是自增的最后的自增ID。PDOStatement::rowCount()主要是用于PDO::query()和PDO::prepare()进行DELETE、INSERT、UPDATE操作影响的结果集。</p>
+<h2 id="包装成一个类"><a href="#包装成一个类" class="headerlink" title="包装成一个类"></a>包装成一个类</h2><pre><code class="php"><span class="class"><span class="keyword">class</span> <span class="title">MY_PDO</span></span>{
+    <span class="keyword">public</span> $dbh;
+    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($uname,$passwd,$host,$dbname)</span></span>{
+        $dsn = <span class="string">'mysql:dbname='</span>.$dbname.<span class="string">';host='</span>.$host;
+        $user = $uname;
+        $password = $passwd;
+        <span class="keyword">try</span> {
+            <span class="keyword">$this</span>-&gt;dbh = <span class="keyword">new</span> PDO($dsn, $user, $password,<span class="keyword">array</span>(PDO::MYSQL_ATTR_INIT_COMMAND =&gt; <span class="string">"SET NAMES 'utf8';"</span>));
+        } <span class="keyword">catch</span> (PDOException $e) {
+            <span class="keyword">echo</span> <span class="string">'Connection failed: '</span> . $e-&gt;getMessage();
+        }
+    }
+    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">SELECT_ALL</span><span class="params">($sql)</span></span>{
+        $prepare = <span class="keyword">$this</span>-&gt;dbh-&gt;prepare($sql);
+        $prepare-&gt;execute();
+        <span class="keyword">return</span> $prepareh-&gt;fetchAll(PDO::FETCH_ASSOC);
+    }
+    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">SELECT_Column</span><span class="params">($sql,$column_num=<span class="number">0</span>)</span></span>{
+        $sth = <span class="keyword">$this</span>-&gt;dbh-&gt;prepare($sql);
+        $sth-&gt;execute();
+        $ret = $sth-&gt;fetchColumn($column_num);
+        <span class="keyword">return</span> $ret;
+    }
+    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">insert_update</span><span class="params">($sql)</span></span>{
+        $prepare = <span class="keyword">$this</span>-&gt;dbh;
+        $count = $prepare-&gt;exec($sql);
+        <span class="keyword">if</span>($count){
+            <span class="keyword">return</span> <span class="keyword">true</span>;
+        }<span class="keyword">else</span> {
+            <span class="keyword">return</span> <span class="keyword">false</span>;
+        }        
+    }
+}
+</code></pre>
+
+    </section>
+    <footer class="post-footer">
+      <section class="author">
+    <h4>DenverB</h4>
+    <p>A designer, developer and entrepreneur. Spends his time travelling the world with a bag of kites. Likes journalism and publishing platforms.</p>
+</section>
+      <section class="share">
+    <h4>Share this post</h4>
+    <a class="icon-twitter" href="http://twitter.com/share?url=http://yoursite.com/2016/10/24/php-PDO/"
+       onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+        <span class="hidden">Twitter</span>
+    </a>
+    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2016/10/24/php-PDO/"
+       onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+        <span class="hidden">Facebook</span>
+    </a>
+    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://yoursite.com/2016/10/24/php-PDO/"
+       onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+        <span class="hidden">Google+</span>
+    </a>
+</section>
+    </footer>
+  </article>
+  <nav class="pagination" role="pagination">
+    
+    <span class="page-number">•</span>
+    
+    <a class="older-posts" href="/2016/10/23/php-compare/">
+        php中的弱类型比较 →
+    </a>
+    
+</nav>
+  <div id="comment" class="comments-area">
+    <h1 class="title"><a href="#disqus_comments" name="disqus_comments">Comments</a></h1>
+
+    
+</div>
+</main>
+
+
+  
+<footer class="site-footer">
+  
+  <div class="inner">
+     <section class="copyright">All content copyright <a href="/">DenverB</a> &copy; 2014 &bull; All rights reserved.</section>
+     <section class="poweredby">Proudly published with <a class="icon-ghost" href="http://zespia.tw/hexo/">Hexo</a></section>
+  </div>
+</footer>
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<script type="text/javascript" src="/js/jquery.fitvids.js"></script>
+<script type="text/javascript" src="/js/index.js"></script>
+
+
+
+
+
+
+</body>
+</html>
