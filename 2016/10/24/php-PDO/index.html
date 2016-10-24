@@ -54,17 +54,17 @@
       <h2 id="什么是PDO"><a href="#什么是PDO" class="headerlink" title="什么是PDO"></a>什么是PDO</h2><p>&#160; &#160; &#160; &#160;PDO（PHP数据对象） 是一个轻量级的、具有兼容接口的PHP数据连接拓展，是php官方的一个库，PDO最主要的优点就是不局限于数据库的类型，并且对于做安全开发来说吗，PDO的安全性更加值得信赖。并且在php6中，PDO也成为了默认的与mysql交互的方式。</p>
 <h2 id="PDO使用学习记录"><a href="#PDO使用学习记录" class="headerlink" title="PDO使用学习记录"></a>PDO使用学习记录</h2><p>&#160; &#160; &#160; &#160;PDO是php官方的一个库，就可以说就是一个封装好了的类，所以它有很多自己的方法。我们来写一个新的类实现使用PDO机制与mysql交互。那么我们可以在类的__construct()这一魔法函数中进行与mysql数据库的连接。  </p>
 <pre><code class="php">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($uname,$passwd,$host,$dbname)</span></span>{
-      $dsn = <span class="string">'mysql:dbname='</span>.$dbname.<span class="string">';host='</span>.$host;
+      $dsn = <span class="string">'mysql:dbname='</span>.$dbname.<span class="string">';host='</span>.$host.<span class="string">';charest=utf8'</span>;
       $user = $uname;
       $password = $passwd;
       <span class="keyword">try</span> {
-          <span class="keyword">$this</span>-&gt;dbh = <span class="keyword">new</span> PDO($dsn, $user, $password,<span class="keyword">array</span>(PDO::MYSQL_ATTR_INIT_COMMAND =&gt; <span class="string">"SET NAMES 'utf8';"</span>));
+          <span class="keyword">$this</span>-&gt;dbh = <span class="keyword">new</span> PDO($dsn, $user, $password);
       } <span class="keyword">catch</span> (PDOException $e) {
           <span class="keyword">echo</span> <span class="string">'Connection failed: '</span> . $e-&gt;getMessage();
       }
 }
 </code></pre>
-<p>&#160; &#160; &#160; &#160;通过__construct()函数创建了一个数据库连接对象并设置编码为utf－8。之后我们就可以通过$dbh来进行各种数据库操作了。  </p>
+<p>&#160; &#160; &#160; &#160;通过__construct()函数创建了一个数据库连接对象并设置编码为utf－8（注：如果php版本低于5.3.4则不可以在dsn中定义charest，而可以使用<code>$this-&gt;dbh = new PDO($dsn, $user, $password,array(PDO::MYSQL_ATTR_INIT_COMMAND =&gt; &quot;SET NAMES &#39;utf8&#39;;&quot;));</code>来定义编码类型）。之后我们就可以通过$dbh来进行各种数据库操作了。  </p>
 <h3 id="SELECT"><a href="#SELECT" class="headerlink" title="SELECT"></a>SELECT</h3><pre><code class="php"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">select</span><span class="params">($sql)</span></span>{
         $sth = <span class="keyword">$this</span>-&gt;dbh-&gt;prepare($sql);
         $sth-&gt;execute();
@@ -87,11 +87,11 @@
 <h2 id="包装成一个类"><a href="#包装成一个类" class="headerlink" title="包装成一个类"></a>包装成一个类</h2><pre><code class="php"><span class="class"><span class="keyword">class</span> <span class="title">MY_PDO</span></span>{
     <span class="keyword">public</span> $dbh;
     <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($uname,$passwd,$host,$dbname)</span></span>{
-        $dsn = <span class="string">'mysql:dbname='</span>.$dbname.<span class="string">';host='</span>.$host;
+        $dsn = <span class="string">'mysql:dbname='</span>.$dbname.<span class="string">';host='</span>.$host.<span class="string">';charest=utf8'</span>;
         $user = $uname;
         $password = $passwd;
         <span class="keyword">try</span> {
-            <span class="keyword">$this</span>-&gt;dbh = <span class="keyword">new</span> PDO($dsn, $user, $password,<span class="keyword">array</span>(PDO::MYSQL_ATTR_INIT_COMMAND =&gt; <span class="string">"SET NAMES 'utf8';"</span>));
+            <span class="keyword">$this</span>-&gt;dbh = <span class="keyword">new</span> PDO($dsn, $user, $password,;
         } <span class="keyword">catch</span> (PDOException $e) {
             <span class="keyword">echo</span> <span class="string">'Connection failed: '</span> . $e-&gt;getMessage();
         }
