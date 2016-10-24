@@ -66,16 +66,16 @@
 </code></pre>
 <p>&#160; &#160; &#160; &#160;通过__construct()函数创建了一个数据库连接对象并设置编码为utf－8（注：如果php版本低于5.3.4则不可以在dsn中定义charest，而可以使用<code>$this-&gt;dbh = new PDO($dsn, $user, $password,array(PDO::MYSQL_ATTR_INIT_COMMAND =&gt; &quot;SET NAMES &#39;utf8&#39;;&quot;));</code>来定义编码类型）。之后我们就可以通过$dbh来进行各种数据库操作了。  </p>
 <h3 id="SELECT"><a href="#SELECT" class="headerlink" title="SELECT"></a>SELECT</h3><pre><code class="php"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">select</span><span class="params">($sql)</span></span>{
-        $sth = <span class="keyword">$this</span>-&gt;dbh-&gt;prepare($sql);
-        $sth-&gt;execute();
-        $ret = $sth-&gt;fetchAll(PDO::FETCH_ASSOC);
+        $prepare = <span class="keyword">$this</span>-&gt;dbh-&gt;prepare($sql);
+        $prepare-&gt;execute();
+        $ret = $prepare-&gt;fetchAll(PDO::FETCH_ASSOC);
         <span class="keyword">return</span> $ret;
   }
 </code></pre>
 <p>&#160; &#160; &#160; &#160;execute()为执行函数，fecthAll()函数可以获取查询结果，其中的参数是可选的：<br>PDO::FETCH_ASSOC – 关联数组形式<br>PDO::FETCH_NUM – 数字索引数组形式<br>PDO::FETCH_BOTH – 两者数组形式都有<br>PDO::FETCH_OBJ – 按照对象的形式<br>&#160; &#160; &#160; &#160;想要单单返回一列的内容的话，可以使用fechColumn()，该函数的参数为一个整形数字，代表列号。</p>
 <h3 id="insert-update"><a href="#insert-update" class="headerlink" title="insert/update"></a>insert/update</h3><pre><code class="php"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">dbInsert</span><span class="params">($sql)</span></span>{
-    $sth = <span class="keyword">$this</span>-&gt;dbh;
-    $count = $sth-&gt;exec($sql);
+    $prepare = <span class="keyword">$this</span>-&gt;dbh;
+    $count = $prepare-&gt;exec($sql);
     <span class="keyword">if</span>($count){
         <span class="keyword">return</span> <span class="keyword">true</span>;
     }<span class="keyword">else</span> {
@@ -102,9 +102,9 @@
         <span class="keyword">return</span> $prepareh-&gt;fetchAll(PDO::FETCH_ASSOC);
     }
     <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">SELECT_Column</span><span class="params">($sql,$column_num=<span class="number">0</span>)</span></span>{
-        $sth = <span class="keyword">$this</span>-&gt;dbh-&gt;prepare($sql);
-        $sth-&gt;execute();
-        $ret = $sth-&gt;fetchColumn($column_num);
+        $prepare = <span class="keyword">$this</span>-&gt;dbh-&gt;prepare($sql);
+        $prepare-&gt;execute();
+        $ret = $prepare-&gt;fetchColumn($column_num);
         <span class="keyword">return</span> $ret;
     }
     <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">insert_update</span><span class="params">($sql)</span></span>{
