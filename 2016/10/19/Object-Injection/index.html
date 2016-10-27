@@ -1,57 +1,295 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
 
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
 <head>
-  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-  <title>PHP中反序列化引起的安全问题 | DenverB</title>
-  <meta name="description" content="不忘初心，方得始终。" />
-  <meta name="HandheldFriendly" content="True" />
-  <meta name="MobileOptimized" content="320" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
-  <link rel="stylesheet" type="text/css" href="/css/screen.css" />
-  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Noto+Serif:400,700,400italic|Open+Sans:700,400" />
 
-  <meta name="generator" content="DenverB">
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
 
   
   
   
+  
 
   
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="web安全," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="php中的类与序列化&amp;#160; &amp;#160; &amp;#160; &amp;#160;和其他面向对象的语言一样，php中也可以通过类的方式来封装一些变量和方法，通过类的定义可以使我们的程序变得更加简洁和方便。而序列化的一大主要用途就是序列化一个类对象，让它变成一个字符串形式，使得数据方便传输和储存，举个例子。&amp;#160; &amp;#160; &amp;#160; &amp;#160;可以看到，我们可以通过serialize函数讲一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP中反序列化引起的安全问题">
+<meta property="og:url" content="http://yoursite.com/2016/10/19/Object-Injection/index.html">
+<meta property="og:site_name" content="DenverB">
+<meta property="og:description" content="php中的类与序列化&amp;#160; &amp;#160; &amp;#160; &amp;#160;和其他面向对象的语言一样，php中也可以通过类的方式来封装一些变量和方法，通过类的定义可以使我们的程序变得更加简洁和方便。而序列化的一大主要用途就是序列化一个类对象，让它变成一个字符串形式，使得数据方便传输和储存，举个例子。&amp;#160; &amp;#160; &amp;#160; &amp;#160;可以看到，我们可以通过serialize函数讲一">
+<meta property="og:image" content="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-19%20%E4%B8%8B%E5%8D%8811.45.38.png">
+<meta property="og:image" content="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-20%20%E4%B8%8B%E5%8D%886.34.20.png">
+<meta property="og:image" content="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-20%20%E4%B8%8B%E5%8D%887.55.28.png">
+<meta property="og:image" content="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-20%20%E4%B8%8B%E5%8D%888.00.56.png">
+<meta property="og:image" content="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-20%20%E4%B8%8B%E5%8D%888.10.31.png">
+<meta property="og:image" content="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-20%20%E4%B8%8B%E5%8D%8811.06.49.png">
+<meta property="og:image" content="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-20%20%E4%B8%8B%E5%8D%8811.11.34.png">
+<meta property="og:image" content="http://oeix47n80.bkt.clouddn.com/20160319002320256">
+<meta property="og:image" content="http://oeix47n80.bkt.clouddn.com/20160319002329943">
+<meta property="og:updated_time" content="2016-10-21T16:33:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PHP中反序列化引起的安全问题">
+<meta name="twitter:description" content="php中的类与序列化&amp;#160; &amp;#160; &amp;#160; &amp;#160;和其他面向对象的语言一样，php中也可以通过类的方式来封装一些变量和方法，通过类的定义可以使我们的程序变得更加简洁和方便。而序列化的一大主要用途就是序列化一个类对象，让它变成一个字符串形式，使得数据方便传输和储存，举个例子。&amp;#160; &amp;#160; &amp;#160; &amp;#160;可以看到，我们可以通过serialize函数讲一">
+<meta name="twitter:image" content="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-19%20%E4%B8%8B%E5%8D%8811.45.38.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/10/19/Object-Injection/"/>
+
+
+  <title> PHP中反序列化引起的安全问题 | DenverB </title>
 </head>
 
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
 
-<body class="post-template">
-
-  <header class="site-head"  style="background-image: url(//blog.ghost.org/content/images/2013/Nov/cover.png)" >
-    <div class="vertical">
-        <div class="site-head-content inner">
-             <a class="blog-logo" href="/"><img src="//blog.ghost.org/content/images/2013/Nov/bloglogo_1-1.png" alt="Blog Logo"/></a> 
-            <h1 class="blog-title">DenverB</h1>
-            <h2 class="blog-description">不忘初心，方得始终。</h2>
-        </div>
-    </div>
-</header>
   
 
-<main class="content" role="main">
-  <article class="post">
-    <span class="post-meta">
-      <time datetime="2016-10-19T14:51:15.000Z" itemprop="datePublished">
-          2016-10-19
-      </time>
+
+
+
+
+
+
+
+
+
+  
+  
     
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">DenverB</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">不忘初心，方得始终。</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
     
-    | 
-    <a href='/tags/web安全/'>web安全</a>
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                PHP中反序列化引起的安全问题
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-19T22:51:15+08:00" content="2016-10-19">
+              2016-10-19
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
     
-</span>
-    <h1 class="post-title">PHP中反序列化引起的安全问题</h1>
-    <section class="post-content">
-      <h1 id="php中的类与序列化"><a href="#php中的类与序列化" class="headerlink" title="php中的类与序列化"></a>php中的类与序列化</h1><p>&#160; &#160; &#160; &#160;和其他面向对象的语言一样，php中也可以通过类的方式来封装一些变量和方法，通过类的定义可以使我们的程序变得更加简洁和方便。而序列化的一大主要用途就是序列化一个类对象，让它变成一个字符串形式，使得数据方便传输和储存，举个例子。<br><img src="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-19%20%E4%B8%8B%E5%8D%8811.45.38.png" alt=""><br>&#160; &#160; &#160; &#160;可以看到，我们可以通过serialize函数讲一个类对象序列化成一个字符串，然后通过unserialize函数讲这个字符串再还原成一个类。这是一个让数据更加方便传输和储存的好方法，但它也可能出现一些不安全的问题。  </p>
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="php中的类与序列化"><a href="#php中的类与序列化" class="headerlink" title="php中的类与序列化"></a>php中的类与序列化</h1><p>&#160; &#160; &#160; &#160;和其他面向对象的语言一样，php中也可以通过类的方式来封装一些变量和方法，通过类的定义可以使我们的程序变得更加简洁和方便。而序列化的一大主要用途就是序列化一个类对象，让它变成一个字符串形式，使得数据方便传输和储存，举个例子。<br><img src="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-19%20%E4%B8%8B%E5%8D%8811.45.38.png" alt=""><br>&#160; &#160; &#160; &#160;可以看到，我们可以通过serialize函数讲一个类对象序列化成一个字符串，然后通过unserialize函数讲这个字符串再还原成一个类。这是一个让数据更加方便传输和储存的好方法，但它也可能出现一些不安全的问题。  </p>
 <h2 id="php中关于类的魔法函数"><a href="#php中关于类的魔法函数" class="headerlink" title="php中关于类的魔法函数"></a>php中关于类的魔法函数</h2><p>&#160; &#160; &#160; &#160;php的类中有很多魔法函数，他们都以两个下划线开头，例如上面的__construct()，还有比如__wakeup(),__destruct,__set(),__get()等。这些魔法函数会在特定的情况下呗自动调用，完成它们相应的使命。比如说__construct()函数就是在类对象生成时自动被调用，__desstruct()函数就是在类对象销毁时自动被调用。而与序列化相关的两个函数就是__sleep()和__wakeup()函数。我们来看看这两个函数可以做什么。<br>&#160; &#160; &#160; &#160;在上面那幅图中，如果你仔细看看序列化后的内容，你会发现你还是可以看出a，b变量的值的，那如果我希望我序列化后的字符串可以隐藏我不想让别人看到的东西呢。此时，__sleep()函数就可以发挥它的作用，这个函数在执行serialize()时会被自动调用，它需要返回一个你想要隐藏或传递的变量的数组。而与之对应的则是__wakeup()函数，它在unserialize()执行时被调用，它可以再给类中的变量重新赋值或者沿用以前的值。<br><img src="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-20%20%E4%B8%8B%E5%8D%886.34.20.png" alt=""><br>&#160; &#160; &#160; &#160;可以看到，在执行serialize()时，自动调用了__sleep()函数，这个函数需要返回一个数组，经过__sleep()之后序列化的字符串中便不会再泄漏类中变量的内容和名称了，而在unserialize()时，又通过__wakeup()给三个变量重新赋值。  </p>
 <h1 id="序列化所带来的问题"><a href="#序列化所带来的问题" class="headerlink" title="序列化所带来的问题"></a>序列化所带来的问题</h1><h2 id="php中的对象注入"><a href="#php中的对象注入" class="headerlink" title="php中的对象注入"></a>php中的对象注入</h2><p>&#160; &#160; &#160; &#160;通过上面可以看到序列化可以把类对象变成一个字符串，之后再经反序列化将这个类对象还原，但是，序列化的字符串一旦由用户可控，那么就会产生一定的安全问题，我们可以看一个例子。<br><img src="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-20%20%E4%B8%8B%E5%8D%887.55.28.png" alt=""><br>&#160; &#160; &#160; &#160;上面这段代码通过获取id的值，进行反序列化。这事正常的情况，但id参数是我们可控的，所以当我们将id参数赋值成一个经序列化后的test类的字符串的话，经过反序列化时，就会生成一个test类的对象。<br><img src="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-20%20%E4%B8%8B%E5%8D%888.00.56.png" alt=""><br>&#160; &#160; &#160; &#160;试想一下，如果test类中会执行eval函数的话，那么就形成了命令执行的漏洞。如下：<br><img src="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-20%20%E4%B8%8B%E5%8D%888.10.31.png" alt=""><br>&#160; &#160; &#160; &#160;而这样的漏洞在真实情况下也是出现过的<a href="http://www.freebuf.com/vuls/80293.html" target="_blank" rel="external">freebuf上的一篇文章介绍了这个漏洞</a>。<br>&#160; &#160; &#160; &#160;这个问题的解决根本还是控制参数，php手册中也有说过“不要把用户生成的内容传入到unserialize()中”。  </p>
 <h2 id="用wechall上的一道题来深入理解一下"><a href="#用wechall上的一道题来深入理解一下" class="headerlink" title="用wechall上的一道题来深入理解一下"></a>用wechall上的一道题来深入理解一下</h2><p>&#160; &#160; &#160; &#160;就是因为看来了wechall上的这道题目才去学习了一下php的对象注入，<a href="http://www.wechall.net/challenge/are_you_serial/index.php" target="_blank" rel="external"></a>，这是一个纯代码审计的问题。给出了好几个源码。<br><img src="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-20%20%E4%B8%8B%E5%8D%8811.06.49.png" alt=""><br>先随便登录一下试试<br><img src="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-20%20%E4%B8%8B%E5%8D%8811.11.34.png" alt=""><br>提示userlevel为0,gg.<br>其中code.php的部分源码如下:  </p>
@@ -113,67 +351,291 @@ $a-&gt;userlevel=<span class="number">100</span>;
 <p>&#160; &#160; &#160; &#160;输出为：O:15:”SERIAL_Solution”:3:{s:8:”username”;s:6:”serial”;s:8:”password”;s:8:”testtest”;s:9:”userlevel”;i:100;}<br>&#160; &#160; &#160; &#160;然后我们需要抓包将cookie中的serial_user变量赋值成上面的字符串，然后再将login和logout去掉即可。<br><img src="http://oeix47n80.bkt.clouddn.com/20160319002320256" alt=""><br><img src="http://oeix47n80.bkt.clouddn.com/20160319002329943" alt="">  </p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>&#160; &#160; &#160; &#160;和大多数漏洞一样，反序列化的问题也是用户参数的控制问题引起的，所以好的预防措施就是不要把用户的输入或者是用户可控的参数直接放进反序列化的操作中去。</p>
 
-    </section>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
     <footer class="post-footer">
-      <section class="author">
-    <h4>DenverB</h4>
-    <p>A designer, developer and entrepreneur. Spends his time travelling the world with a bag of kites. Likes journalism and publishing platforms.</p>
-</section>
-      <section class="share">
-    <h4>Share this post</h4>
-    <a class="icon-twitter" href="http://twitter.com/share?url=http://yoursite.com/2016/10/19/Object-Injection/"
-       onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
-        <span class="hidden">Twitter</span>
-    </a>
-    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2016/10/19/Object-Injection/"
-       onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
-        <span class="hidden">Facebook</span>
-    </a>
-    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://yoursite.com/2016/10/19/Object-Injection/"
-       onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
-        <span class="hidden">Google+</span>
-    </a>
-</section>
+      
+        <div class="post-tags">
+          
+            <a href="/tags/web安全/" rel="tag">#web安全</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/13/sql-injection/" rel="next" title="web安全总结－－SQL注入">
+                <i class="fa fa-chevron-left"></i> web安全总结－－SQL注入
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/22/sqlmap/" rel="prev" title="sqlmap中的“蜜罐”实验">
+                sqlmap中的“蜜罐”实验 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
     </footer>
   </article>
-  <nav class="pagination" role="pagination">
-    
-    <a class="newer-posts" href="/2016/10/22/sqlmap/">
-        ← sqlmap中的“蜜罐”实验
-    </a>
-    
-    <span class="page-number">•</span>
-    
-    <a class="older-posts" href="/2016/10/13/sql-injection/">
-        web安全总结－－SQL注入 →
-    </a>
-    
-</nav>
-  <div id="comment" class="comments-area">
-    <h1 class="title"><a href="#disqus_comments" name="disqus_comments">Comments</a></h1>
-
-    
-</div>
-</main>
 
 
-  
-<footer class="site-footer">
-  
-  <div class="inner">
-     <section class="copyright">All content copyright <a href="/">DenverB</a> &copy; 2014 &bull; All rights reserved.</section>
-     <section class="poweredby">Proudly published with <a class="icon-ghost" href="http://zespia.tw/hexo/">Hexo</a></section>
+
+    <div class="post-spread">
+      
+    </div>
   </div>
-</footer>
-
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-<script type="text/javascript" src="/js/jquery.fitvids.js"></script>
-<script type="text/javascript" src="/js/index.js"></script>
 
 
+          </div>
+          
 
 
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://oeix47n80.bkt.clouddn.com/IMG_0023.JPG"
+               alt="DenverB" />
+          <p class="site-author-name" itemprop="name">DenverB</p>
+          <p class="site-description motion-element" itemprop="description">不忘初心，方得始终。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#php中的类与序列化"><span class="nav-number">1.</span> <span class="nav-text">php中的类与序列化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#php中关于类的魔法函数"><span class="nav-number">1.1.</span> <span class="nav-text">php中关于类的魔法函数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#序列化所带来的问题"><span class="nav-number">2.</span> <span class="nav-text">序列化所带来的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#php中的对象注入"><span class="nav-number">2.1.</span> <span class="nav-text">php中的对象注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用wechall上的一道题来深入理解一下"><span class="nav-number">2.2.</span> <span class="nav-text">用wechall上的一道题来深入理解一下</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DenverB</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
 
 
 </body>

@@ -1,57 +1,288 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
 
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
 <head>
-  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-  <title>PDO机制学习 | DenverB</title>
-  <meta name="description" content="不忘初心，方得始终。" />
-  <meta name="HandheldFriendly" content="True" />
-  <meta name="MobileOptimized" content="320" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
-  <link rel="stylesheet" type="text/css" href="/css/screen.css" />
-  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Noto+Serif:400,700,400italic|Open+Sans:700,400" />
 
-  <meta name="generator" content="DenverB">
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
 
   
   
   
+  
 
   
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="php学习," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="什么是PDO&amp;#160; &amp;#160; &amp;#160; &amp;#160;PDO（PHP数据对象） 是一个轻量级的、具有兼容接口的PHP数据连接拓展，是php官方的一个库，PDO最主要的优点就是不局限于数据库的类型，并且对于做安全开发来说吗，PDO的安全性更加值得信赖。并且在php6中，PDO也成为了默认的与mysql交互的方式。
+PDO使用学习记录&amp;#160; &amp;#160; &amp;#160; &amp;#160;P">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PDO机制学习">
+<meta property="og:url" content="http://yoursite.com/2016/10/24/php-PDO/index.html">
+<meta property="og:site_name" content="DenverB">
+<meta property="og:description" content="什么是PDO&amp;#160; &amp;#160; &amp;#160; &amp;#160;PDO（PHP数据对象） 是一个轻量级的、具有兼容接口的PHP数据连接拓展，是php官方的一个库，PDO最主要的优点就是不局限于数据库的类型，并且对于做安全开发来说吗，PDO的安全性更加值得信赖。并且在php6中，PDO也成为了默认的与mysql交互的方式。
+PDO使用学习记录&amp;#160; &amp;#160; &amp;#160; &amp;#160;P">
+<meta property="og:updated_time" content="2016-10-24T15:20:16.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PDO机制学习">
+<meta name="twitter:description" content="什么是PDO&amp;#160; &amp;#160; &amp;#160; &amp;#160;PDO（PHP数据对象） 是一个轻量级的、具有兼容接口的PHP数据连接拓展，是php官方的一个库，PDO最主要的优点就是不局限于数据库的类型，并且对于做安全开发来说吗，PDO的安全性更加值得信赖。并且在php6中，PDO也成为了默认的与mysql交互的方式。
+PDO使用学习记录&amp;#160; &amp;#160; &amp;#160; &amp;#160;P">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/10/24/php-PDO/"/>
+
+
+  <title> PDO机制学习 | DenverB </title>
 </head>
 
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
 
-<body class="post-template">
-
-  <header class="site-head"  style="background-image: url(//blog.ghost.org/content/images/2013/Nov/cover.png)" >
-    <div class="vertical">
-        <div class="site-head-content inner">
-             <a class="blog-logo" href="/"><img src="//blog.ghost.org/content/images/2013/Nov/bloglogo_1-1.png" alt="Blog Logo"/></a> 
-            <h1 class="blog-title">DenverB</h1>
-            <h2 class="blog-description">不忘初心，方得始终。</h2>
-        </div>
-    </div>
-</header>
   
 
-<main class="content" role="main">
-  <article class="post">
-    <span class="post-meta">
-      <time datetime="2016-10-24T13:19:19.000Z" itemprop="datePublished">
-          2016-10-24
-      </time>
+
+
+
+
+
+
+
+
+
+  
+  
     
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">DenverB</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">不忘初心，方得始终。</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
     
-    | 
-    <a href='/tags/php学习/'>php学习</a>
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                PDO机制学习
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-24T21:19:19+08:00" content="2016-10-24">
+              2016-10-24
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
     
-</span>
-    <h1 class="post-title">PDO机制学习</h1>
-    <section class="post-content">
-      <h2 id="什么是PDO"><a href="#什么是PDO" class="headerlink" title="什么是PDO"></a>什么是PDO</h2><p>&#160; &#160; &#160; &#160;PDO（PHP数据对象） 是一个轻量级的、具有兼容接口的PHP数据连接拓展，是php官方的一个库，PDO最主要的优点就是不局限于数据库的类型，并且对于做安全开发来说吗，PDO的安全性更加值得信赖。并且在php6中，PDO也成为了默认的与mysql交互的方式。</p>
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="什么是PDO"><a href="#什么是PDO" class="headerlink" title="什么是PDO"></a>什么是PDO</h2><p>&#160; &#160; &#160; &#160;PDO（PHP数据对象） 是一个轻量级的、具有兼容接口的PHP数据连接拓展，是php官方的一个库，PDO最主要的优点就是不局限于数据库的类型，并且对于做安全开发来说吗，PDO的安全性更加值得信赖。并且在php6中，PDO也成为了默认的与mysql交互的方式。</p>
 <h2 id="PDO使用学习记录"><a href="#PDO使用学习记录" class="headerlink" title="PDO使用学习记录"></a>PDO使用学习记录</h2><p>&#160; &#160; &#160; &#160;PDO是php官方的一个库，就可以说就是一个封装好了的类，所以它有很多自己的方法。我们来写一个新的类实现使用PDO机制与mysql交互。那么我们可以在类的__construct()这一魔法函数中进行与mysql数据库的连接。  </p>
 <pre><code class="php">  <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($uname,$passwd,$host,$dbname)</span></span>{
       $dsn = <span class="string">'mysql:dbname='</span>.$dbname.<span class="string">';host='</span>.$host.<span class="string">';charest=utf8'</span>;
@@ -119,63 +350,287 @@
 }
 </code></pre>
 
-    </section>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
     <footer class="post-footer">
-      <section class="author">
-    <h4>DenverB</h4>
-    <p>A designer, developer and entrepreneur. Spends his time travelling the world with a bag of kites. Likes journalism and publishing platforms.</p>
-</section>
-      <section class="share">
-    <h4>Share this post</h4>
-    <a class="icon-twitter" href="http://twitter.com/share?url=http://yoursite.com/2016/10/24/php-PDO/"
-       onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
-        <span class="hidden">Twitter</span>
-    </a>
-    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2016/10/24/php-PDO/"
-       onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
-        <span class="hidden">Facebook</span>
-    </a>
-    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://yoursite.com/2016/10/24/php-PDO/"
-       onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
-        <span class="hidden">Google+</span>
-    </a>
-</section>
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php学习/" rel="tag">#php学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/23/php-compare/" rel="next" title="php中的弱类型比较">
+                <i class="fa fa-chevron-left"></i> php中的弱类型比较
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
     </footer>
   </article>
-  <nav class="pagination" role="pagination">
-    
-    <span class="page-number">•</span>
-    
-    <a class="older-posts" href="/2016/10/23/php-compare/">
-        php中的弱类型比较 →
-    </a>
-    
-</nav>
-  <div id="comment" class="comments-area">
-    <h1 class="title"><a href="#disqus_comments" name="disqus_comments">Comments</a></h1>
-
-    
-</div>
-</main>
 
 
-  
-<footer class="site-footer">
-  
-  <div class="inner">
-     <section class="copyright">All content copyright <a href="/">DenverB</a> &copy; 2014 &bull; All rights reserved.</section>
-     <section class="poweredby">Proudly published with <a class="icon-ghost" href="http://zespia.tw/hexo/">Hexo</a></section>
+
+    <div class="post-spread">
+      
+    </div>
   </div>
-</footer>
-
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-<script type="text/javascript" src="/js/jquery.fitvids.js"></script>
-<script type="text/javascript" src="/js/index.js"></script>
 
 
+          </div>
+          
 
 
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://oeix47n80.bkt.clouddn.com/IMG_0023.JPG"
+               alt="DenverB" />
+          <p class="site-author-name" itemprop="name">DenverB</p>
+          <p class="site-description motion-element" itemprop="description">不忘初心，方得始终。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是PDO"><span class="nav-number">1.</span> <span class="nav-text">什么是PDO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PDO使用学习记录"><span class="nav-number">2.</span> <span class="nav-text">PDO使用学习记录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SELECT"><span class="nav-number">2.1.</span> <span class="nav-text">SELECT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#insert-update"><span class="nav-number">2.2.</span> <span class="nav-text">insert/update</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#包装成一个类"><span class="nav-number">3.</span> <span class="nav-text">包装成一个类</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">DenverB</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
 
 
 </body>
