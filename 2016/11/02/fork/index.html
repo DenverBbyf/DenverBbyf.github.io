@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="学习记录," />
+  <meta name="keywords" content="php学习," />
 
 
 
@@ -84,21 +84,21 @@
 
 
 
-<meta name="description" content="记录一次很有意思的小实验&amp;#160; &amp;#160; &amp;#160; &amp;#160;前几天在freebuf上看到了一篇很有意思的文章，原文链接，在这篇文章中，作者讲了一个很有意思的事情，我们都知道sqlmap是一个渗透测试的神器，很多人都会使用它来sql注入，但如果没有注意看数据中的内容，就有可能中招。&amp;#160; &amp;#160; &amp;#160; &amp;#160;sqlmap都运行在bash下，而在bash中，">
+<meta name="description" content="进程与线程&amp;#160; &amp;#160; &amp;#160; &amp;#160;看过一个很形象的比喻，一个软件或者程序就像一个大的工厂，进程就像这个工厂里面分工不同的车间（比如焊接车间，锻造车间，包装车间），而进程就像是某个车间里面的工人或者流水线，多个工人或者多条流水线一同工作时就会大大提高效率（参考文章）。所以当我们的程序需要处理大量的事务时，多线程或者多进程就变得十分必要了。  
+PHP中的多进程&amp;#160">
 <meta property="og:type" content="article">
-<meta property="og:title" content="sqlmap中的“蜜罐”实验">
-<meta property="og:url" content="http://yoursite.com/2016/10/22/sqlmap/index.html">
+<meta property="og:title" content="php中的多进程">
+<meta property="og:url" content="http://yoursite.com/2016/11/02/fork/index.html">
 <meta property="og:site_name" content="DenverB">
-<meta property="og:description" content="记录一次很有意思的小实验&amp;#160; &amp;#160; &amp;#160; &amp;#160;前几天在freebuf上看到了一篇很有意思的文章，原文链接，在这篇文章中，作者讲了一个很有意思的事情，我们都知道sqlmap是一个渗透测试的神器，很多人都会使用它来sql注入，但如果没有注意看数据中的内容，就有可能中招。&amp;#160; &amp;#160; &amp;#160; &amp;#160;sqlmap都运行在bash下，而在bash中，">
-<meta property="og:image" content="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-22%20%E4%B8%8A%E5%8D%8812.42.08.png">
-<meta property="og:image" content="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-22%20%E4%B8%8A%E5%8D%8810.32.11.png">
-<meta property="og:image" content="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-22%20%E4%B8%8A%E5%8D%8810.36.42.png">
-<meta property="og:image" content="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-22%20%E4%B8%8A%E5%8D%8810.39.17.png">
-<meta property="og:updated_time" content="2016-10-22T02:40:56.000Z">
+<meta property="og:description" content="进程与线程&amp;#160; &amp;#160; &amp;#160; &amp;#160;看过一个很形象的比喻，一个软件或者程序就像一个大的工厂，进程就像这个工厂里面分工不同的车间（比如焊接车间，锻造车间，包装车间），而进程就像是某个车间里面的工人或者流水线，多个工人或者多条流水线一同工作时就会大大提高效率（参考文章）。所以当我们的程序需要处理大量的事务时，多线程或者多进程就变得十分必要了。  
+PHP中的多进程&amp;#160">
+<meta property="og:image" content="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-11-02%20%E4%B8%8B%E5%8D%889.05.03.png">
+<meta property="og:updated_time" content="2016-11-02T13:32:38.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="sqlmap中的“蜜罐”实验">
-<meta name="twitter:description" content="记录一次很有意思的小实验&amp;#160; &amp;#160; &amp;#160; &amp;#160;前几天在freebuf上看到了一篇很有意思的文章，原文链接，在这篇文章中，作者讲了一个很有意思的事情，我们都知道sqlmap是一个渗透测试的神器，很多人都会使用它来sql注入，但如果没有注意看数据中的内容，就有可能中招。&amp;#160; &amp;#160; &amp;#160; &amp;#160;sqlmap都运行在bash下，而在bash中，">
-<meta name="twitter:image" content="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-22%20%E4%B8%8A%E5%8D%8812.42.08.png">
+<meta name="twitter:title" content="php中的多进程">
+<meta name="twitter:description" content="进程与线程&amp;#160; &amp;#160; &amp;#160; &amp;#160;看过一个很形象的比喻，一个软件或者程序就像一个大的工厂，进程就像这个工厂里面分工不同的车间（比如焊接车间，锻造车间，包装车间），而进程就像是某个车间里面的工人或者流水线，多个工人或者多条流水线一同工作时就会大大提高效率（参考文章）。所以当我们的程序需要处理大量的事务时，多线程或者多进程就变得十分必要了。  
+PHP中的多进程&amp;#160">
+<meta name="twitter:image" content="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-11-02%20%E4%B8%8B%E5%8D%889.05.03.png">
 
 
 
@@ -119,10 +119,10 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/10/22/sqlmap/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/11/02/fork/"/>
 
 
-  <title> sqlmap中的“蜜罐”实验 | DenverB </title>
+  <title> php中的多进程 | DenverB </title>
 </head>
 
 <body itemscope itemtype="//schema.org/WebPage" lang="zh-Hans">
@@ -244,7 +244,7 @@
             
             
               
-                sqlmap中的“蜜罐”实验
+                php中的多进程
               
             
           </h1>
@@ -256,8 +256,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-10-22T10:26:39+08:00" content="2016-10-22">
-              2016-10-22
+            <time itemprop="dateCreated" datetime="2016-11-02T19:52:13+08:00" content="2016-11-02">
+              2016-11-02
             </time>
           </span>
 
@@ -284,7 +284,26 @@
       
 
       
-        <h1 id="记录一次很有意思的小实验"><a href="#记录一次很有意思的小实验" class="headerlink" title="记录一次很有意思的小实验"></a>记录一次很有意思的小实验</h1><p>&#160; &#160; &#160; &#160;前几天在freebuf上看到了一篇很有意思的文章，<a href="http://www.yilan.io/article/5805a294a3dd044f5a2ba81d" target="_blank" rel="external">原文链接</a>，在这篇文章中，作者讲了一个很有意思的事情，我们都知道sqlmap是一个渗透测试的神器，很多人都会使用它来sql注入，但如果没有注意看数据中的内容，就有可能中招。<br>&#160; &#160; &#160; &#160;sqlmap都运行在bash下，而在bash中，有着这样一个小特性，就是当我们输入的内容中含有”`command`“，那么command将会被执行并返回结果。来试一下：<br><img src="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-22%20%E4%B8%8A%E5%8D%8812.42.08.png" alt=""><br>&#160; &#160; &#160; &#160;从上面一段可以看到ls命令被成功执行了，而在第二条命令中，！！则代表了上一条指令，这也是bash的一个功能，另外，！＋n（数字）则代表之前的第n条指令。<br>&#160; &#160; &#160; &#160;之后我们来想想sqlmap的执行命令，sqlmap中有一个参数–data=”……”,还有一个是–cookie=”……”,他们分别代表了需要post提交的数据和用户的cookie，试想一下，如果我们是网站的开发者，我们就可以在post数据或者cookie中做手脚，我们在其中完全可以插入一条我们想要在攻击者电脑上执行的命令，而如果攻击者没有仔细阅读post数据或者cookie中的内容，而是选择直接复制粘贴的话，那么攻击者就可以被我们攻击了。来做个实验来测试一下。<br>&#160; &#160; &#160; &#160;首先，我们构造一个网站，这个网站可以post提交数据，我们在数据中插入一条nc命令，并让它在后台执行。<br><img src="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-22%20%E4%B8%8A%E5%8D%8810.32.11.png" alt=""><br>&#160; &#160; &#160; &#160;我设置了一个type为hidden的post数据，并给它的value赋值为一条命令，setsid为后台创建一个进程运行，ip地址我的腾讯云服务器，我事先在我的腾讯云开启了1234端口的监听，这样一旦这行命令被执行，就可以诶在我的腾讯云上弹一个shell，进行测试。<br><img src="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-22%20%E4%B8%8A%E5%8D%8810.36.42.png" alt=""><br>&#160; &#160; &#160; &#160;我们在bash中运行sqlmap的命令，并直接将data的数据复制粘贴，可以看到已经在后台运行了nc命令，此时，我的腾讯云商已经获得了攻击者的shell。<br><img src="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-10-22%20%E4%B8%8A%E5%8D%8810.39.17.png" alt=""><br>&#160; &#160; &#160; &#160;可以看到此时的权限还是root权限，所以可以想干什么干什么。所以呢，在使用sqlmap时还是要看清楚数据的内容，不要攻击不成反被日了。</p>
+        <h1 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a>进程与线程</h1><p>&#160; &#160; &#160; &#160;看过一个很形象的比喻，一个软件或者程序就像一个大的工厂，进程就像这个工厂里面分工不同的车间（比如焊接车间，锻造车间，包装车间），而进程就像是某个车间里面的工人或者流水线，多个工人或者多条流水线一同工作时就会大大提高效率（<a href="http://www.ruanyifeng.com/blog/2013/04/processes_and_threads.html" target="_blank" rel="external">参考文章</a>）。所以当我们的程序需要处理大量的事务时，多线程或者多进程就变得十分必要了。  </p>
+<h1 id="PHP中的多进程"><a href="#PHP中的多进程" class="headerlink" title="PHP中的多进程"></a>PHP中的多进程</h1><p>&#160; &#160; &#160; &#160;PHP中进程时不支持多线程的，但我们可以使用多进程来代替这个功能，优化我们的程序。首先，PHP中多进程的视线依赖于pcntl和posix两个扩展，可以使用php －m查看是否有这两个扩展。如果没有，可以自行安装。  </p>
+<h2 id="开启多进程"><a href="#开启多进程" class="headerlink" title="开启多进程"></a>开启多进程</h2><p>&#160; &#160; &#160; &#160;PHP中的pcntl_fork()函数可以创建一个子进程，当执行完这个函数中，程序就一分为二，一个程序的pid值为0，这个程序就是子进程；另一个程序的pid值大于0（并且等于子进程pid值），这个程序就是父进程我们使用pcntl_wait()函数可以将父进程挂起，知道子进程都推出为止，这样就可以防止僵尸进程的出现。举个例子：  </p>
+<pre><code class="php">$parentpid=getmypid();
+$pid=pcntl_fork();
+<span class="keyword">if</span>($pid===<span class="number">-1</span>){
+    <span class="keyword">echo</span> <span class="string">"Fail create"</span>;
+}
+<span class="keyword">else</span>{
+    <span class="keyword">if</span>($pid===<span class="number">0</span>){
+        $childpid=getmypid();
+        <span class="keyword">echo</span> <span class="string">"This is child PID:"</span>.$childpid;
+    }
+    <span class="keyword">else</span>{
+        <span class="keyword">echo</span> <span class="string">"This is father PID:"</span>.$parentpid.<span class="string">"In this else PID "</span>.$pid.<span class="string">"\n"</span>;
+    }
+}
+pcntl_wait($status);
+</code></pre>
+<p>&#160; &#160; &#160; &#160;我们运行程序(<strong>注：pcntl_fork()不能在apache上使用，我们可以在CGI模式或者命令行下执行ph</strong>p)可以看到结果：<br><img src="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-11-02%20%E4%B8%8B%E5%8D%889.05.03.png" alt=""><br>&#160; &#160; &#160; &#160;可以看到，我们成功创建了一个子进程。后续会再学习如何在进程间相互通信。</p>
 
       
     </div>
@@ -307,7 +326,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/学习记录/" rel="tag">#学习记录</a>
+            <a href="/tags/php学习/" rel="tag">#php学习</a>
           
         </div>
       
@@ -316,17 +335,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/10/19/Object-Injection/" rel="next" title="PHP中反序列化引起的安全问题">
-                <i class="fa fa-chevron-left"></i> PHP中反序列化引起的安全问题
+              <a href="/2016/10/24/php-PDO/" rel="next" title="PDO机制学习">
+                <i class="fa fa-chevron-left"></i> PDO机制学习
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/10/23/php-compare/" rel="prev" title="php中的弱类型比较">
-                php中的弱类型比较 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -433,7 +448,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#记录一次很有意思的小实验"><span class="nav-number">1.</span> <span class="nav-text">记录一次很有意思的小实验</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#进程与线程"><span class="nav-number">1.</span> <span class="nav-text">进程与线程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PHP中的多进程"><span class="nav-number">2.</span> <span class="nav-text">PHP中的多进程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#开启多进程"><span class="nav-number">2.1.</span> <span class="nav-text">开启多进程</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

@@ -241,6 +241,119 @@
             
               
                 
+                <a class="post-title-link" href="/2016/11/02/fork/" itemprop="url">
+                  php中的多进程
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-02T19:52:13+08:00" content="2016-11-02">
+              2016-11-02
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a>进程与线程</h1><p>&#160; &#160; &#160; &#160;看过一个很形象的比喻，一个软件或者程序就像一个大的工厂，进程就像这个工厂里面分工不同的车间（比如焊接车间，锻造车间，包装车间），而进程就像是某个车间里面的工人或者流水线，多个工人或者多条流水线一同工作时就会大大提高效率（<a href="http://www.ruanyifeng.com/blog/2013/04/processes_and_threads.html" target="_blank" rel="external">参考文章</a>）。所以当我们的程序需要处理大量的事务时，多线程或者多进程就变得十分必要了。  </p>
+<h1 id="PHP中的多进程"><a href="#PHP中的多进程" class="headerlink" title="PHP中的多进程"></a>PHP中的多进程</h1><p>&#160; &#160; &#160; &#160;PHP中进程时不支持多线程的，但我们可以使用多进程来代替这个功能，优化我们的程序。首先，PHP中多进程的视线依赖于pcntl和posix两个扩展，可以使用php －m查看是否有这两个扩展。如果没有，可以自行安装。  </p>
+<h2 id="开启多进程"><a href="#开启多进程" class="headerlink" title="开启多进程"></a>开启多进程</h2><p>&#160; &#160; &#160; &#160;PHP中的pcntl_fork()函数可以创建一个子进程，当执行完这个函数中，程序就一分为二，一个程序的pid值为0，这个程序就是子进程；另一个程序的pid值大于0（并且等于子进程pid值），这个程序就是父进程我们使用pcntl_wait()函数可以将父进程挂起，知道子进程都推出为止，这样就可以防止僵尸进程的出现。举个例子：  </p>
+<pre><code class="php">$parentpid=getmypid();
+$pid=pcntl_fork();
+<span class="keyword">if</span>($pid===<span class="number">-1</span>){
+    <span class="keyword">echo</span> <span class="string">"Fail create"</span>;
+}
+<span class="keyword">else</span>{
+    <span class="keyword">if</span>($pid===<span class="number">0</span>){
+        $childpid=getmypid();
+        <span class="keyword">echo</span> <span class="string">"This is child PID:"</span>.$childpid;
+    }
+    <span class="keyword">else</span>{
+        <span class="keyword">echo</span> <span class="string">"This is father PID:"</span>.$parentpid.<span class="string">"In this else PID "</span>.$pid.<span class="string">"\n"</span>;
+    }
+}
+pcntl_wait($status);
+</code></pre>
+<p>&#160; &#160; &#160; &#160;我们运行程序(<strong>注：pcntl_fork()不能在apache上使用，我们可以在CGI模式或者命令行下执行ph</strong>p)可以看到结果：<br><img src="http://oeix47n80.bkt.clouddn.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-11-02%20%E4%B8%8B%E5%8D%889.05.03.png" alt=""><br>&#160; &#160; &#160; &#160;可以看到，我们成功创建了一个子进程。后续会再学习如何在进程间相互通信。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/10/24/php-PDO/" itemprop="url">
                   PDO机制学习
                 </a>
@@ -1043,7 +1156,7 @@ $row=mysql_fetch_array(mysql_query($sql));
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">7</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
